@@ -69,20 +69,14 @@ export default function MovieList() {
 
   const [listInfo, setInfo] = useState([])
   const [listTable, setList] = useState([])
-  const [page, setPage] = useState(0)
+  const [offset, setPage] = useState(0)
   const [choosen, setChoosen] = useState({})
 
   useEffect(async()=>{
-    if(page === 0)
-    {
-      getData(page)
-    }
-    else
-    {
-      getData( page + 20)
-    }
 
-  },[page])
+      getData(offset)
+
+  },[offset])
 
 
 
@@ -154,9 +148,9 @@ export default function MovieList() {
       </Table>
           </CardBody>
           <CardFooter>
-          <Button color="primary" disabled={page === 0} onClick={()=>setPage(page - 1)}>Previous</Button>
+          <Button color="primary" disabled={offset === 0} onClick={()=>setPage(offset - 1)}>Previous</Button>
           <Button color="secondary"><Add/>  Add new </Button>
-          <Button color="primary" onClick={()=>setPage(page + 1)}>Next</Button>
+          <Button color="primary" onClick={()=>setPage(offset + 20)}>Next</Button>
           </CardFooter>
         </Card>
       </GridItem>

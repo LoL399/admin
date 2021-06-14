@@ -11,6 +11,7 @@ import CustomInput from "components/CustomInput/CustomInput";
 import CardFooter from "components/Card/CardFooter";
 
 import RegularButton from "components/CustomButtons/Button";
+import { Button } from "@material-ui/core";
 const styles = {
 
 
@@ -49,7 +50,8 @@ export default function MovieForm(props){
         <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/This_Gun_for_Hire_%281942%29_poster.jpg" className={classes.moviePoster} />
+          <img src={item.info.poster} className={classes.moviePoster} />
+          <Button> Add + </Button>
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
           <CustomInput
