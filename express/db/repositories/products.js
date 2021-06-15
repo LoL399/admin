@@ -19,10 +19,14 @@ const update = async (id, params) => {
 const getAllByOffset = async (offset) =>
   await knex("productions").select().limit(20).offset(offset);
 
+const find = async (filter) =>
+  await knex("productions").select().where("info", 'like',`%${filter}%`);
+
   module.exports = {
     insert,
     getByParams,
     getAllByOffset,
     update,
+    find
   };
   

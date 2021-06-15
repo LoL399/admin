@@ -19,9 +19,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import Search from "@material-ui/icons/Search";
 // core components
 import tableStyles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-
 
 const styles = {
   moviePoster:{
@@ -45,6 +45,10 @@ const styles = {
       color: "#FFFFFF",
     },
   },
+  seacrhArea: {
+    color: "#FFFFFF",
+  },
+
   cardTitleWhite: {
     color: "#FFFFFF",
     marginTop: "0px",
@@ -71,12 +75,37 @@ export default function MovieList() {
   const [listTable, setList] = useState([])
   const [offset, setPage] = useState(0)
   const [choosen, setChoosen] = useState({})
+  const [search, setSearch] = useState('');
 
   useEffect(async()=>{
 
       getData(offset)
 
   },[offset])
+
+
+  useEffect(()=>{
+    if(search === '' )
+    {
+      console.log('empty')
+      setPage(0);
+    }
+    else
+    {
+      filmsService.find({filter: search}).then((list)=>{
+        const {data} = list;
+        setInfo(data);
+       let items = [];
+         for (let product of data)
+         {
+           let info = JSON.parse(product.info )
+           items.push([product.id, product.type, info.name])
+         };
+       setList(items);
+   
+      })
+    }
+  },[search])
 
 
 
@@ -96,8 +125,8 @@ export default function MovieList() {
   }
 
   const getMovie = (id) =>{
-    let item = listInfo.filter(x=>x.id === id );
-    setChoosen(item[0])
+    console.log(id)
+    setChoosen(listInfo.filter(x=>x.id === id )[0])
   }
 
   const classes = useStyles();
@@ -110,6 +139,10 @@ export default function MovieList() {
             <p className={classes.cardCategoryWhite}>
               Film table
             </p>
+            <input onChange={(e)=>setSearch(e.target.value)}/>
+            <Button color="white" aria-label="edit" justIcon round>
+          <Search />
+        </Button>
           </CardHeader>
           <CardBody>
 
@@ -156,7 +189,6 @@ export default function MovieList() {
       </GridItem>
       <GridItem  xs={12} sm={12} md={6}>
         <MovieForm item = {choosen}/>
-
       </GridItem>
     </GridContainer>
   );
