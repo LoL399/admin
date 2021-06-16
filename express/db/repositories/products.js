@@ -17,7 +17,7 @@ const update = async (id, params) => {
 };
 
 const getAllByOffset = async (offset) =>
-  await knex("productions").select().limit(20).offset(offset);
+  await knex("productions").select().orderBy('id','desc').limit(10).offset(offset);
 
   module.exports = {
     insert,
