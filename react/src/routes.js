@@ -32,6 +32,7 @@ import UserList from "page/user";
 import PostList from "page/post";
 import CommentList from "page/comments";
 import Person from "@material-ui/icons/Person";
+import PersonsList from "page/person";
 
 const dashboardRoutes = [
   {
@@ -76,7 +77,7 @@ const dashboardRoutes = [
     path: "/people",
     name: "People",
     icon: Person,
-    component: UserList,
+    component: PersonsList,
     layout: "/admin",
   },
   {

@@ -11,6 +11,8 @@ import CustomInput from "components/CustomInput/CustomInput";
 import CardFooter from "components/Card/CardFooter";
 
 import RegularButton from "components/CustomButtons/Button";
+import { Button } from "@material-ui/core";
+// import filmsService from "page/service/filmsService";
 const styles = {
 
 
@@ -26,15 +28,21 @@ const styles = {
   const useStyles = makeStyles(styles);
 export default function MovieForm(props){
     const classes = useStyles();
-    const {item} = props
-
-    const [film, setFilm] = useState(item)
+    const [film, setFilm] = useState(props.item)
 
 
     useState(()=>{
-      setFilm(item);
-      console.log(film)
-    },[item])
+      console.log(props)
+      setFilm(props.item)
+      // if(props.item)
+      // {
+      //   filmsService.find({id:props.item || 1}).then((film)=>{
+      //     const {data} = film;
+      //     setFilm(data);
+      //   })
+      // }
+
+    },[props.item])
 
 
     return (
@@ -49,7 +57,8 @@ export default function MovieForm(props){
         <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/This_Gun_for_Hire_%281942%29_poster.jpg" className={classes.moviePoster} />
+          <img src={film.info?.poster} className={classes.moviePoster} />
+          <Button> Add + </Button>
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
           <CustomInput

@@ -1,0 +1,74 @@
+.contact-form{
+    margin-top: 2%;
+}
+
+
+form label {
+    display: block;
+    position: relative;
+    padding: 20px;
+
+}
+form label input {
+    font: 18hepx Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    display: block;
+    border: none;
+
+    width: inherit;
+    margin-bottom: 20px;
+    font-size: 18px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 1px purple solid;
+}
+
+form label textarea {
+    font: 18hepx Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    display: block;
+    border: none;
+
+    width: inherit;
+    margin-bottom: 20px;
+    font-size: 18px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 1px purple solid;
+}
+form label input::placeholder {
+    transition: all 0.2s ease-in-out;
+    color: #999;
+    font: 18px Helvetica, Arial, sans-serif;
+}
+form label input:focus, form label input.populated {
+    padding-top: 28px;
+    padding-bottom: 12px;
+}
+form label input:focus::placeholder, form label input.populated::placeholder {
+    color: transparent;
+}
+form label input:focus + span, form label input.populated + span {
+    opacity: 1;
+    top: 10px;
+}
+form label span {
+    color: #35dc9b;
+    font: 13px Helvetica, Arial, sans-serif;
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+form input[type="submit"] {
+    transition: all 0.2s ease-in-out;
+    font: 18px Helvetica, Arial, sans-serif;
+    border: none;
+    background: #1aaf75;
+    color: #fff;
+    padding: 16px 40px;
+}
+form input[type="submit"]:hover {
+    background: #109f67;
+}
