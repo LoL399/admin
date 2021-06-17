@@ -1,6 +1,7 @@
 const { persons } = require("../db/repositories");
 
 const getAllByOffset = async (req, res) => {
+  console.log(req)
   const {offset} = req.body || 0;
   await persons.getAllByOffset(offset).then((data)=> res.status(200).json(data));
 };

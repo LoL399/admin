@@ -1,7 +1,18 @@
 const { products } = require("../db/repositories");
 
 const getAllByOffset = async (req, res) => {
-  const {offset} = req.body || 0;
+  console.log(req.params)
+  let offset  = 0;
+  if(req.params.offset)
+  {
+    offset = req.params.offset
+  }
+  else
+  {
+    offset = req.body.offset
+  }
+
+  
   await products.getAllByOffset(offset).then((data)=> res.status(200).json(data));
 };
 
