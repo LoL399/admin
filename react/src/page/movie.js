@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import $ from "jquery";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-
+import serialize from "form-serialize";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-
+import RegularButton from "components/CustomButtons/Button";
 import CardFooter from "components/Card/CardFooter";
 import { Button } from "@material-ui/core";
-import MovieForm from "./components/movieForm";
 import { Add } from "@material-ui/icons";
 import filmsService from "./service/filmsService";
 import Table from "@material-ui/core/Table";
@@ -76,6 +76,7 @@ export default function MovieList() {
   const [offset, setPage] = useState(0)
   const [choosen, setChoosen] = useState({})
   const [search, setSearch] = useState('');
+  const [images, setImages] = useState([]);
 
   useEffect(async()=>{
 
@@ -108,6 +109,15 @@ export default function MovieList() {
   },[search])
 
 
+  const submitForm = () =>{
+    var formData = $("#info")[0];
+    var obj = serialize(formData, { hash: true });
+    if(images.length > 0)
+    {
+      obj.photo = images
+    }
+    console.log(obj);
+  }
 
   const getData = (offset) =>{
     filmsService.list({offset}).then((list)=>{
@@ -188,7 +198,139 @@ export default function MovieList() {
         </Card>
       </GridItem>
       <GridItem  xs={12} sm={12} md={6}>
-        <MovieForm item = {choosen}/>
+
+
+      <Card>
+        <CardHeader color="primary">
+          <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+          <p className={classes.cardCategoryWhite}>
+            Here is a subtitle for this table
+          </p>
+        </CardHeader>
+        <CardBody>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+          <img src={JSON.parse(choosen.info).poster ? JSON.parse(choosen.info).poster :  
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png'
+            } className={classes.moviePoster} />
+          </GridItem>
+          <GridItem xs={12} sm={12} md={12}>
+          <h2>Production info</h2>   
+          <form action="" id='info' className="contact-form">
+          <GridContainer>
+          <GridItem xs={6} sm={6} md={6}>
+
+                  <label>
+                  <input name="name" type="text" placeholder="Name" value={JSON.parse(choosen.info).name || '' }/>
+                  <span>Name</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="text" placeholder="birthday" type="date" value = { choosen.birth}/>
+                  <span>birth</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in}/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <textarea name="summary" placeholder="Summary" type="text" value={JSON.parse(choosen.info).summary }/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
+                  <span>Images</span>
+                  </label>
+                  </GridItem>
+          </GridContainer>
+          </form>
+          <h2>Product detail</h2>   
+          <form action="" id='info' className="contact-form">
+          <GridContainer>
+          <GridItem xs={6} sm={6} md={6}>
+            <label>
+                  <input name="name" type="text" placeholder="Name" value={JSON.parse(choosen.info).name || '' }/>
+                  <span>Name</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="text" placeholder="birthday" type="date" value = { choosen.birth}/>
+                  <span>birth</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in}/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <textarea name="summary" placeholder="Summary" type="text" value={JSON.parse(choosen.info).summary }/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
+                  <span>Images</span>
+                  </label>
+                  </GridItem>
+          </GridContainer>
+          </form>
+          <h2>Casts n Directive</h2>   
+          <form action="" id='info' className="contact-form">
+          <GridContainer>
+          <GridItem xs={6} sm={6} md={6}>
+            <label>
+                  <input name="name" type="text" placeholder="Name" value={JSON.parse(choosen.info).name || '' }/>
+                  <span>Name</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="text" placeholder="birthday" type="date" value = { choosen.birth}/>
+                  <span>birth</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in}/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <textarea name="summary" placeholder="Summary" type="text" value={JSON.parse(choosen.info).summary }/>
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={6} sm={6} md={6}>
+                  <label>
+                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
+                  <span>Images</span>
+                  </label>
+                  </GridItem>
+          </GridContainer>
+          </form>
+          </GridItem>
+        </GridContainer>
+        </CardBody>
+        <CardFooter>
+        <RegularButton color="default" onClick={()=>{alert('ok')}}>Previous</RegularButton>
+        <RegularButton color="primary">ABC</RegularButton>
+        <RegularButton color="danger" onClick={()=>submitForm()}>Add</RegularButton>
+        </CardFooter>
+        </Card>
+
       </GridItem>
     </GridContainer>
   );

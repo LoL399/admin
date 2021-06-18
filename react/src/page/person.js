@@ -77,6 +77,7 @@ export default function PersonsList() {
   const [offset, setPage] = useState(0)
   const [choosen, setChoosen] = useState({})
   const [search, setSearch] = useState('');
+  const [images, setImages] = useState([]);
 
   useEffect(async()=>{
 
@@ -132,6 +133,10 @@ export default function PersonsList() {
   const submitForm = () =>{
     var formData = $("#info")[0];
     var obj = serialize(formData, { hash: true });
+    if(images.length > 0)
+    {
+      obj.photo = images
+    }
     console.log(obj);
   }
 
@@ -141,14 +146,13 @@ export default function PersonsList() {
       <GridItem xs={12} sm={12} md={6}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
-            <p className={classes.cardCategoryWhite}>
-              Film table
-            </p>
+            <h4 className={classes.cardTitleWhite}>Info table</h4>
+
             <input onChange={(e)=>setSearch(e.target.value)}/>
             <Button color="white" aria-label="edit" justIcon round>
           <Search />
         </Button>
+        <RegularButton color="danger"><Add/>  Add new </RegularButton>
           </CardHeader>
           <CardBody>
 
@@ -187,8 +191,7 @@ export default function PersonsList() {
       </Table>
           </CardBody>
           <CardFooter>
-          <Button color="primary" disabled={offset === 0} onClick={()=>setPage(offset - 1)}>Previous</Button>
-          <Button color="secondary"><Add/>  Add new </Button>
+          <Button color="primary" disabled={offset === 0} onClick={()=>setPage(offset - 20)}>Previous</Button>
           <Button color="primary" onClick={()=>setPage(offset + 20)}>Next</Button>
           </CardFooter>
         </Card>
@@ -215,42 +218,35 @@ export default function PersonsList() {
           <GridItem xs={6} sm={6} md={6}>
 
                   <label>
-                  <input name="name" type="text" placeholder="Name"/>
+                  <input name="name" type="text" placeholder="Name" value={choosen.name || '' }/>
                   <span>Name</span>
                   </label>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={6}>
                   <label>
-                  <input name="birth" placeholder="birthday" type="date"/>
+                  <input name="text" placeholder="birthday" type="date" value = { choosen.birth}/>
                   <span>birth</span>
                   </label>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={6}>
                   <label>
-                  <input name="born_in" placeholder="Birth place" type="text"/>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in}/>
                   <span>Birth place</span>
                   </label>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={6}>
                   <label>
-                  <textarea name="summary" placeholder="Summary" type="text"/>
+                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary }/>
                   <span>Birth place</span>
                   </label>
                   </GridItem>
                   <GridItem xs={6} sm={6} md={6}>
                   <label>
-                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{$('#imageInput')[0].value= e.target.value }} />
-                  <input name="images" id='imageInput' value="" type="text"/>
+                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
                   <span>Images</span>
                   </label>
                   </GridItem>
           </GridContainer>
-
-            
-
-
-            
-
           </form>
           </GridItem>
         </GridContainer>
