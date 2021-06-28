@@ -17,7 +17,7 @@ const update = async (id, params) => {
 };
 
 const getAllByOffset = async (offset) =>
-  await knex("productions").select().orderBy('id','desc').limit(10).offset(offset);
+  await knex("productions").select().orderBy('id','asc').limit(20).offset(offset);
 
 const find = async (filter) =>
   await knex("productions").select().where("info", 'like',`%${filter}%`);

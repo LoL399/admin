@@ -14,14 +14,18 @@ const getByParams = async (params) => {
   return result;
 };
 
+const findNews = async (data) => {
+  console.log(data)
+  const result = await knex("posts").where("type",'=',data.type).where('content','like', `%${data.filter}%`).select();
+  return result;
+};
+
 const update = async (id, params) => {
   await knex("posts").update(params).where({ id });
 };
 
 const getAllByOffset = async (offset) =>
   await knex("posts").select().limit(20).offset(offset);
-
-
   const getNewsAllByOffset = async (offset) =>
   await knex("posts").where({type: 'news'}).limit(5).offset(offset);
 
@@ -30,5 +34,6 @@ module.exports = {
   getByParams,
   getAllByOffset,
   update,
-  getNewsAllByOffset
+  getNewsAllByOffset,
+  findNews
 };

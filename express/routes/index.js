@@ -37,7 +37,7 @@ router.post('/news', function(req, res, next) {
   Posts.getAllByOffset(req, res)
 });
 router.post('/news/find', function(req, res, next) {
-  Posts.findByData(req, res)
+  Posts.findNews(req, res)
 });
 router.post('/news/get', function(req, res, next) {
   Posts.getData(req, res)

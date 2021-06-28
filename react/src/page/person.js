@@ -100,8 +100,8 @@ export default function PersonsList() {
        let items = [];
          for (let product of data)
          {
-           items.push([product.id, product.type, product.born_in])
-         };
+           items.push([product.id, product.type, product.born_in]);
+         }
        setList(items);
    
       })
@@ -118,7 +118,7 @@ export default function PersonsList() {
        for (let person of data)
        {
          items.push([person.id, person.name, person.born_in])
-       };
+       }
      setList(items)
  
     })
@@ -126,7 +126,8 @@ export default function PersonsList() {
 
   const getMovie = (id) =>{
     console.log(id)
-    setChoosen(listInfo.filter(x=>x.id === id )[0])
+    let item = listInfo.filter(x=>x.id === id )[0];
+    setChoosen(item)  
 
   }
 
@@ -139,20 +140,30 @@ export default function PersonsList() {
     }
     console.log(obj);
   }
-
   const classes = useStyles();
+
+
+  const changeInput = (field, value) => {
+
+    let form =  JSON.parse(JSON.stringify(choosen));
+
+    form[field] = value.toString();
+    setChoosen(form);
+  }
+
+  
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={6}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Info table</h4>
+            <h4 className={classes.cardTitleWhite}>People&apos;s table</h4>
 
             <input onChange={(e)=>setSearch(e.target.value)}/>
             <Button color="white" aria-label="edit" justIcon round>
           <Search />
         </Button>
-        <RegularButton color="danger"><Add/>  Add new </RegularButton>
+        <RegularButton color="danger" onClick={()=>{setChoosen({})}}><Add/>  Add new </RegularButton>
           </CardHeader>
           <CardBody>
 
@@ -200,10 +211,15 @@ export default function PersonsList() {
            
       <Card>
         <CardHeader color="primary">
-          <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+          <h4 className={classes.cardTitleWhite}>{choosen?.name || 'Add new person to database'  }</h4>
+          {choosen?.name ? null:           
           <p className={classes.cardCategoryWhite}>
             Here is a subtitle for this table
           </p>
+          }
+          <RegularButton color="danger" onClick={()=>submitForm()}>{choosen.name ? 'Edit' : 'Add'}</RegularButton>
+          
+
         </CardHeader>
         <CardBody>
         <GridContainer>
@@ -215,47 +231,44 @@ export default function PersonsList() {
           <GridItem xs={12} sm={12} md={12}>
           <form action="" id='info' className="contact-form">
           <GridContainer>
-          <GridItem xs={6} sm={6} md={6}>
+          <GridItem xs={12} sm={6} md={6}>
 
                   <label>
-                  <input name="name" type="text" placeholder="Name" value={choosen.name || '' }/>
+                  <input name="name" type="text" placeholder="Name" value={choosen.name || '' } onChange={(e)=>changeInput('name', e.target.value)}/>
                   <span>Name</span>
                   </label>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={6}>
+                  <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="text" placeholder="birthday" type="date" value = { choosen.birth}/>
+                  <input name="text" placeholder="birthday" type="text" value = {choosen.birth} onChange={(e)=>changeInput('birth', e.target.value)}/>
                   <span>birth</span>
                   </label>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={6}>
+                  <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in}/>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in || ''} onChange={(e)=>changeInput('born_in', e.target.value)} />
                   <span>Birth place</span>
                   </label>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={6}>
+                  <GridItem xs={12} sm={12} md={12}>
                   <label>
-                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary }/>
-                  <span>Birth place</span>
+                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary || '' } onChange={(e)=>changeInput('summary', e.target.value)}/>
+                  <span>Summary</span>
                   </label>
                   </GridItem>
-                  <GridItem xs={6} sm={6} md={6}>
+                  <GridItem xs={12} sm={6} md={6}>
                   <label>
                   <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
                   <span>Images</span>
                   </label>
                   </GridItem>
+
+
           </GridContainer>
           </form>
           </GridItem>
         </GridContainer>
         </CardBody>
-        <CardFooter>
-        <RegularButton color="default" onClick={()=>{alert('ok')}}>Previous</RegularButton>
-        <RegularButton color="primary">ABC</RegularButton>
-        <RegularButton color="danger" onClick={()=>submitForm()}>Add</RegularButton>
-        </CardFooter>
         </Card>
 
       </GridItem>

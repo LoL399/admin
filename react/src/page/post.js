@@ -78,27 +78,31 @@ export default function PersonsList() {
   const [search, setSearch] = useState('');
   useEffect(async()=>{
 
-      getData(offset)
+      await getData(offset)
 
   },[offset])
 
 
   useEffect(()=>{
+    console.log(search)
+
     if(search === '' )
     {
       console.log('empty')
-      setPage(0);
+      getData(0);
     }
     else
     {
+
       Service.find({filter: search}).then((list)=>{
         const {data} = list;
+        console.log(data)
         setInfo(data);
        let items = [];
          for (let product of data)
          {
-           items.push([product.id, product.type, product.born_in])
-         };
+          items.push([product.id, product.date, product.content.match(/<h1>(.|\n)*?<\/h1>/g)])
+         }
        setList(items);
    
       })
@@ -115,15 +119,16 @@ export default function PersonsList() {
        for (let news of data)
        {
          items.push([news.id, news.date, news.content.match(/<h1>(.|\n)*?<\/h1>/g)])
-       };
+       }
      setList(items)
  
     })
   }
 
   const getMovie = (id) =>{
-    console.log(id)
-    setChoosen(listInfo.filter(x=>x.id === id )[0])
+    console.log(id);
+    let post = listInfo.filter(x=>x.id === id )[0];
+    setChoosen(JSON.parse(JSON.stringify(post)));
 
   }
 

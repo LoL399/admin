@@ -14,9 +14,9 @@ const getAllByOffset = async (req, res) => {
 };
 
 
-const findByData = async (req, res) => {
+const findNews = async (req, res) => {
   const {filter} = req.body || 0;
-  await posts.find(filter).then((data)=> res.status(200).json(data));
+  await posts.findNews({filter, type: 'news'}).then((data)=> res.status(200).json(data));
 };
 
 
@@ -26,4 +26,4 @@ const getData = async (req, res) => {
 };
 
 
-module.exports = { getAllByOffset, findByData, getData};
+module.exports = { getAllByOffset, findNews, getData};
