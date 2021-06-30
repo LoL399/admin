@@ -2,14 +2,16 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE persons 
     (
-      id INTEGER PRIMARY KEY AUTOINCREMENT ,
+      id BIGINT NOT NULL PRIMARY KEY,
       name TEXT,
       birth DATE,
       born_in TEXT,
       summary TEXT,
       images TEXT[],
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,   
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP    
+      slug TEXT,
+      crawl_data JSON,
+      created_at timestamptz DEFAULT now(),
+      updated_at timestamptz DEFAULT now()
     )
   `);
 };

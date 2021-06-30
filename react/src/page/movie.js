@@ -101,6 +101,7 @@ export default function MovieList() {
     {
       filmsService.find({filter: search}).then((list)=>{
         const {data} = list;
+
         setInfo(data);
        let items = [];
          for (let product of data)
@@ -148,8 +149,8 @@ export default function MovieList() {
      let items = [];
        for (let product of data)
        {
-         let info = JSON.parse(product.info )
-         items.push([product.id, product.type, info.name])
+         product.photos = product.photos.slice(1,product.photos.length - 1);
+         items.push([product.id, product.type, product.info.name]);
        }
      setList(items)
  
@@ -303,7 +304,7 @@ export default function MovieList() {
         <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
-          <img src={ choosen.info && JSON.parse(choosen.info).poster ? JSON.parse(choosen.info).poster :  
+          <img src={ choosen.info && choosen.info.poster ? choosen.info.poster :  
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png'
             } className={classes.moviePoster} />
           </GridItem>
@@ -325,50 +326,50 @@ export default function MovieList() {
           <GridItem xs={12} sm={6} md={6}>
 
                   <label>
-                  <input name="name" type="text" placeholder="Name" value={JSON.parse(choosen.info).name || '' } onChange={(e)=>changeInput('name', e.target.value,1)}/>
+                  <input name="name" type="text" placeholder="Name" value={choosen.info.name || '' } onChange={(e)=>changeInput('name', e.target.value,1)}/>
                   <span>Name</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="originalLanguage" placeholder="originalLanguage" type="text" value = {JSON.parse(choosen.info).originalLanguage || '' } onChange={(e)=>changeInput('originalLanguage', e.target.value,1)}/>
+                  <input name="originalLanguage" placeholder="originalLanguage" type="text" value = {choosen.info.originalLanguage || '' } onChange={(e)=>changeInput('originalLanguage', e.target.value,1)}/>
                   <span>originalLanguage:</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="streamingDate" placeholder="streamingDate" type="text" value = {JSON.parse(choosen.info).streamingDate || '' } onChange={(e)=>changeInput('streamingDate', e.target.value,1)}/>
+                  <input name="streamingDate" placeholder="streamingDate" type="text" value = {choosen.info.streamingDate || '' } onChange={(e)=>changeInput('streamingDate', e.target.value,1)}/>
                   <span>streamingDate:</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="productions" placeholder="productions" type="text" value = {JSON.parse(choosen.info).productions || '' } onChange={(e)=>changeInput('productions', e.target.value,1)}/>
+                  <input name="productions" placeholder="productions" type="text" value = {choosen.info.productions || '' } onChange={(e)=>changeInput('productions', e.target.value,1)}/>
                   <span>productions</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="soundMixs" placeholder="soundMixs" type="text" value = {JSON.parse(choosen.info).soundMixs || '' } onChange={(e)=>changeInput('soundMixs', e.target.value,1)}/>
+                  <input name="soundMixs" placeholder="soundMixs" type="text" value = {choosen.info.soundMixs || '' } onChange={(e)=>changeInput('soundMixs', e.target.value,1)}/>
                   <span>soundMixs</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input name="aspectRatio" placeholder="aspectRatio" type="text" value = {JSON.parse(choosen.info).aspectRatio || '' } onChange={(e)=>changeInput('aspectRatio', e.target.value,1)}/>
+                  <input name="aspectRatio" placeholder="aspectRatio" type="text" value = {choosen.info.aspectRatio || '' } onChange={(e)=>changeInput('aspectRatio', e.target.value,1)}/>
                   <span>aspectRatio</span>
                   </label>
                   </GridItem>
 
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input placeholder="network" name='network' type="text"  value = {JSON.parse(choosen.info).network || '' } onChange={(e)=>changeInput('network', e.target.value,1)}/>
+                  <input placeholder="network" name='network' type="text"  value = {choosen.info.network || '' } onChange={(e)=>changeInput('network', e.target.value,1)}/>
                   <span>network</span>
                   </label>
                   </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
-                  <input placeholder="starting" name='starting' type="text"  value = {JSON.parse(choosen.info).starting || '' } onChange={(e)=>changeInput('starting', e.target.value,1)}/>
+                  <input placeholder="starting" name='starting' type="text"  value = {choosen.info.starting || '' } onChange={(e)=>changeInput('starting', e.target.value,1)}/>
                   <span>starting</span>
                   </label>
                   </GridItem>
@@ -381,12 +382,35 @@ export default function MovieList() {
 
                   <GridItem xs={12} sm={12} md={12}>
                   <label>
-                  <textarea name="summary" placeholder="Summary" type="text" value={JSON.parse(choosen.info).summary || ''} onChange={(e)=>changeInput('summary', e.target.value,1)}/>
+                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.info.summary || ''} onChange={(e)=>changeInput('summary', e.target.value,1)}/>
                   <span>Summary</span>
                   </label>
                   </GridItem>
           </GridContainer>
           </form>
+
+          <div className='overflow-container'>
+
+                <GridItem xs={12} sm={12} md={12}>
+                <h4> Images </h4>
+                  <GridContainer>
+                  {
+                  choosen.photos.split(',').map((el,idx) => {
+                    return(
+                      el && el !== '' ? 
+                      <GridItem xs={3} sm={3} md={3} key={idx}>
+                      <img src={el.slice(1,el.length-1)} className={classes.moviePoster} />
+                      </GridItem> : null 
+
+                    )
+                  }) 
+                  }
+                  </GridContainer>
+
+                </GridItem>
+
+
+                </div> 
 
          {
            choosen.type?.toString().toLowerCase() === 'tv' ?

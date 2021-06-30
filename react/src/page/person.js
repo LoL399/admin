@@ -224,7 +224,7 @@ export default function PersonsList() {
         <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
-          <img src={choosen.images? choosen.images.split(',')[0] :  
+          <img src={choosen.images? choosen.images[0] :  
           'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png'
             } className={classes.moviePoster} />
           </GridItem>
@@ -250,20 +250,40 @@ export default function PersonsList() {
                   <span>Birth place</span>
                   </label>
                   </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                  <label>
-                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary || '' } onChange={(e)=>changeInput('summary', e.target.value)}/>
-                  <span>Summary</span>
-                  </label>
-                  </GridItem>
                   <GridItem xs={12} sm={6} md={6}>
                   <label>
                   <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
                   <span>Images</span>
                   </label>
                   </GridItem>
+                  <GridItem xs={12} sm={12} md={12}>
+                  <label>
+                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary || '' } onChange={(e)=>changeInput('summary', e.target.value)}/>
+                  <span>Summary</span>
+                  </label>
+                  </GridItem>
+                  <div className='overflow-container'>
+
+                  <GridItem xs={12} sm={12} md={12}>
+                  <h4> Images </h4>
+                    <GridContainer>
+                    {
+                    choosen.images?.map((el,idx) => {
+                      return(
+                        el && el !== '' ? 
+                        <GridItem xs={3} sm={3} md={3} key={idx}>
+                        <img src={el} className={classes.moviePoster} />
+                        </GridItem> : null 
+
+                      )
+                    })
+                  }
+                    </GridContainer>
+
+                  </GridItem>
 
 
+                  </div>
           </GridContainer>
           </form>
           </GridItem>

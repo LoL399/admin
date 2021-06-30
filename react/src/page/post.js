@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 // @material-ui/core components
+import $ from "jquery";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -11,7 +12,7 @@ import './style/form.css'
 import CardFooter from "components/Card/CardFooter";
 import { Button } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import Service from "./service/newsService";
+import Service from "./service/usersService";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -21,7 +22,7 @@ import Search from "@material-ui/icons/Search";
 // core components
 import tableStyles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import RegularButton from "components/CustomButtons/Button";
-import { Editor } from '@tinymce/tinymce-react';
+import serialize from "form-serialize";
 
 const styles = {
   moviePoster:{
@@ -70,38 +71,36 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function PersonsList() {
-  const editorRef = useRef(null);
+
   const [listInfo, setInfo] = useState([])
   const [listTable, setList] = useState([])
   const [offset, setPage] = useState(0)
   const [choosen, setChoosen] = useState({})
   const [search, setSearch] = useState('');
+  const [images, setImages] = useState([]);
+
   useEffect(async()=>{
 
-      await getData(offset)
+      getData(offset)
 
   },[offset])
 
 
   useEffect(()=>{
-    console.log(search)
-
     if(search === '' )
     {
       console.log('empty')
-      getData(0);
+      setPage(0);
     }
     else
     {
-
       Service.find({filter: search}).then((list)=>{
         const {data} = list;
-        console.log(data)
         setInfo(data);
        let items = [];
          for (let product of data)
          {
-          items.push([product.id, product.date, product.content.match(/<h1>(.|\n)*?<\/h1>/g)])
+           items.push([product.id, product.type, product.born_in]);
          }
        setList(items);
    
@@ -116,9 +115,9 @@ export default function PersonsList() {
       const {data} = list;
       setInfo(data);
      let items = [];
-       for (let news of data)
+       for (let person of data)
        {
-         items.push([news.id, news.date, news.content.match(/<h1>(.|\n)*?<\/h1>/g)])
+         items.push([person.id, person.name, person.born_in])
        }
      setList(items)
  
@@ -126,23 +125,39 @@ export default function PersonsList() {
   }
 
   const getMovie = (id) =>{
-    console.log(id);
-    let post = listInfo.filter(x=>x.id === id )[0];
-    setChoosen(JSON.parse(JSON.stringify(post)));
+    console.log(id)
+    let item = listInfo.filter(x=>x.id === id )[0];
+    setChoosen(item)  
 
   }
 
   const submitForm = () =>{
-    console.log(editorRef.current.getContent())
+    var formData = $("#info")[0];
+    var obj = serialize(formData, { hash: true });
+    if(images.length > 0)
+    {
+      obj.photo = images
+    }
+    console.log(obj);
+  }
+  const classes = useStyles();
+
+
+  const changeInput = (field, value) => {
+
+    let form =  JSON.parse(JSON.stringify(choosen));
+
+    form[field] = value.toString();
+    setChoosen(form);
   }
 
-  const classes = useStyles();
+  
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={6}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Info table</h4>
+            <h4 className={classes.cardTitleWhite}>People&apos;s table</h4>
 
             <input onChange={(e)=>setSearch(e.target.value)}/>
             <Button color="white" aria-label="edit" justIcon round>
@@ -156,7 +171,7 @@ export default function PersonsList() {
         
           <TableHead className={classes["primary TableHeader"]}>
             <TableRow className={classes.tableHeadRow} >
-              {["id", "date", "article's name"].map((prop, key) => {
+              {["id", "name", "birth place"].map((prop, key) => {
                 return (
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
@@ -187,8 +202,8 @@ export default function PersonsList() {
       </Table>
           </CardBody>
           <CardFooter>
-          <Button color="primary" disabled={offset === 0} onClick={()=>setPage(offset - 5)}>Previous</Button>
-          <Button color="primary" onClick={()=>setPage(offset + 5)}>Next</Button>
+          <Button color="primary" disabled={offset === 0} onClick={()=>setPage(offset - 20)}>Previous</Button>
+          <Button color="primary" onClick={()=>setPage(offset + 20)}>Next</Button>
           </CardFooter>
         </Card>
       </GridItem>
@@ -196,40 +211,84 @@ export default function PersonsList() {
            
       <Card>
         <CardHeader color="primary">
-          <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+          <h4 className={classes.cardTitleWhite}>{choosen?.name || 'Add new person to database'  }</h4>
+          {choosen?.name ? null:           
           <p className={classes.cardCategoryWhite}>
             Here is a subtitle for this table
           </p>
+          }
+          <RegularButton color="danger" onClick={()=>submitForm()}>{choosen.name ? 'Edit' : 'Add'}</RegularButton>
+          
+
         </CardHeader>
         <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
-              <Editor
-                onInit={(evt, editor) => editorRef.current = editor}
-                initialValue = {choosen.content || ''}
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount'
-                  ],
-                  toolbar: 'undo redo | formatselect | ' +
-                  'bold italic backcolor | alignleft aligncenter ' +
-                  'alignright alignjustify | bullist numlist outdent indent | ' +
-                  'removeformat | help',
-                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                }}
-              />
-          
+          <img src={choosen.images? choosen.images[0] :  
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png'
+            } className={classes.moviePoster} />
+          </GridItem>
+          <GridItem xs={12} sm={12} md={12}>
+          <form action="" id='info' className="contact-form">
+          <GridContainer>
+          <GridItem xs={12} sm={6} md={6}>
+
+                  <label>
+                  <input name="name" type="text" placeholder="Name" value={choosen.name || '' } onChange={(e)=>changeInput('name', e.target.value)}/>
+                  <span>Name</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={12} sm={6} md={6}>
+                  <label>
+                  <input name="text" placeholder="birthday" type="text" value = {choosen.birth} onChange={(e)=>changeInput('birth', e.target.value)}/>
+                  <span>birth</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={12} sm={6} md={6}>
+                  <label>
+                  <input name="born_in" placeholder="Birth place" type="text" value = { choosen.born_in || ''} onChange={(e)=>changeInput('born_in', e.target.value)} />
+                  <span>Birth place</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={12} sm={6} md={6}>
+                  <label>
+                  <input placeholder="Summary" type="file" multiple accept="image/*" onChange={(e)=>{setImages(e.target.value) }} />
+                  <span>Images</span>
+                  </label>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={12}>
+                  <label>
+                  <textarea name="summary" placeholder="Summary" type="text" value={choosen.summary || '' } onChange={(e)=>changeInput('summary', e.target.value)}/>
+                  <span>Summary</span>
+                  </label>
+                  </GridItem>
+                  <div className='overflow-container'>
+
+                  <GridItem xs={12} sm={12} md={12}>
+                  <h4> Images </h4>
+                    <GridContainer>
+                    {
+                    choosen.images?.map((el,idx) => {
+                      return(
+                        el && el !== '' ? 
+                        <GridItem xs={3} sm={3} md={3} key={idx}>
+                        <img src={el} className={classes.moviePoster} />
+                        </GridItem> : null 
+
+                      )
+                    })
+                  }
+                    </GridContainer>
+
+                  </GridItem>
+
+
+                  </div>
+          </GridContainer>
+          </form>
           </GridItem>
         </GridContainer>
         </CardBody>
-        <CardFooter>
-        <RegularButton color="primary">ABC</RegularButton>
-        <RegularButton color="danger" onClick={()=>submitForm()}>Add</RegularButton>
-        </CardFooter>
         </Card>
 
       </GridItem>

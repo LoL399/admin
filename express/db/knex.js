@@ -1,7 +1,13 @@
+const config = require("../configs");
+
 module.exports = require("knex")({
-  client: "sqlite3",
+  client: "pg",
   connection: {
-    filename: __dirname + "/db.sqlite",
+    host: config.host || "127.0.0.1",
+    user: config.user || "postgres",
+    password: config.password || "Loito2112",
+    database: config.database || "lemoncat",
+    charset: "utf8",
   },
   migrations: {
     directory: __dirname + "/migrations",

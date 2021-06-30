@@ -1,16 +1,41 @@
-var express = require('express');
-const { getAllByOffset } = require('./movie');
-var router = express.Router();
+const { users } = require("../db/repositories");
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+const getAllByOffset = async (req, res) => {
+  const {offset} = req.body || 0;
+  await users.getAllByOffset(offset).then((data)=> res.status(200).json(data));
+};
 
 
-router.get('/', function(req, res, next) {
-  getAllByOffset(req, res)
-});
+const findByData = async (req, res) => {
+  console.log(req.params)
+  let name  = '';
+  if(req.params.name)
+  {
+    name = req.params.name
+  }
+  else
+  {
+    name = req.body.name
+  }
+  if(name){
+    await users.getByParams({name}).then((data)=> res.status(200).json(data));
+  } else {
+    res.status(200).json({})
+  }
+
+};
 
 
-module.exports = router;
+const getData = async (req, res) => {
+  const {id} = req.body || 0;
+  await users.getByParams(id).then((data)=> res.status(200).json(data));
+};
+
+const getDataByName = async (req, res) => {
+  const {id} = req.body || 0;
+  await users.getByParams(id).then((data)=> res.status(200).json(data));
+};
+
+
+
+module.exports = { getAllByOffset, findByData, getData};

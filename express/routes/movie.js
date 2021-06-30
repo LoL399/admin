@@ -13,7 +13,24 @@ const getAllByOffset = async (req, res) => {
   }
 
   
-  await products.getAllByOffset(offset).then((data)=> res.status(200).json(data));
+  await products.getAllByOffset(offset,'movie').then((data)=> res.status(200).json(data));
+};
+
+
+const getTVByOffset = async (req, res) => {
+  console.log(req.params)
+  let offset  = 0;
+  if(req.params.offset)
+  {
+    offset = req.params.offset
+  }
+  else
+  {
+    offset = req.body.offset
+  }
+
+  
+  await products.getAllByOffset(offset,'tv').then((data)=> res.status(200).json(data));
 };
 
 
@@ -29,4 +46,4 @@ const getData = async (req, res) => {
 };
 
 
-module.exports = { getAllByOffset, findByData, getData};
+module.exports = { getAllByOffset, findByData, getData, getTVByOffset};
